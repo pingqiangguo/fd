@@ -1,10 +1,24 @@
 [package]
 authors = ["David Peter <mail@david-peter.de>"]
+
+# 在 Rust 语言中，包的构建信息指定了包的构建方式，包括构建时要使用的编译器、编译选项、构建脚本等信息。
+# 下面的代码中，我们指定了包的构建脚本为 build.rs。
+# 这样，在使用 Cargo 工具构建包时，Cargo 会执行 build.rs 这个构建脚本，以便进行更复杂的构建处理。
 build = "build.rs"
+
+# 在 Rust 语言中，一个包可以被分为多个类别，每个类别都有一个特定的名称。
+# 例如，一个包可能属于 cli 类别（表示命令行工具），也可能属于 library 类别（表示库）。
 categories = ["command-line-utilities"]
 description = "fd is a simple, fast and user-friendly alternative to find."
+
+# 在 Rust 语言中，包排除信息指定了哪些文件或目录在构建时应该被忽略。
+# 例如，如果有一个目录中包含了多个不同的 Rust 包，但只希望构建其中的某个包，那么可以通过指定包排除信息来实现。
 exclude = ["/benchmarks/*"]
 homepage = "https://github.com/sharkdp/fd"
+
+# 在 Rust 语言中，包的关键字信息用于描述包的主要功能或特性。
+# 例如，一个包可以有关键字 http，表示这个包主要用于处理 HTTP 协议相关的内容；
+# 或者有关键字 database，表示这个包主要用于处理数据库相关的内容。
 keywords = [
     "search",
     "find",
@@ -19,6 +33,7 @@ repository = "https://github.com/sharkdp/fd"
 version = "8.5.3"
 edition= "2021"
 
+# 徽章信息是指一个项目的相关信息，例如项目的状态、版本、构建情况等，通常用于在项目的 README 文件中显示。
 [badges.appveyor]
 repository = "sharkdp/fd"
 
@@ -29,6 +44,8 @@ repository = "sharkdp/fd"
 name = "fd"
 path = "src/main.rs"
 
+# Cargo.toml 的 [build-dependencies] 部分用于指定依赖项，这些依赖项在编译项目时需要用到，但不会被项目的最终二进制文件所依赖。
+# 例如，一个项目可能依赖于一个生成工具来生成某些文件，但这个生成工具不会被项目的最终二进制文件所依赖，那么这个生成工具就可以被指定为 [build-dependencies]。
 [build-dependencies]
 version_check = "0.9"
 
@@ -57,6 +74,8 @@ faccess = "0.2.4"
 version = "4.0.22"
 features = ["suggestions", "color", "wrap_help", "cargo", "unstable-grouped", "derive"]
 
+# cargo.toml 中的 [target.'cfg(unix)'.dependencies] 部分用于指定在 Unix 系统上编译时需要的依赖项。
+# 例如，如果一个项目依赖于一个专门用于 Unix 系统的库，那么可以使用 [target.'cfg(unix)'.dependencies] 来指定这个库。如果在其他系统上编译该项目，则不会加载这个库。
 [target.'cfg(unix)'.dependencies]
 users = "0.11.0"
 nix = { version = "0.24.2", default-features = false, features = ["signal"] }
@@ -70,13 +89,24 @@ libc = "0.2"
 [target.'cfg(all(not(windows), not(target_os = "android"), not(target_os = "macos"), not(target_os = "freebsd"), not(all(target_env = "musl", target_pointer_width = "32")), not(target_arch = "riscv64")))'.dependencies]
 jemallocator = {version = "0.5.0", optional = true}
 
+# Cargo.toml 的 [dev-dependencies] 部分用于指定开发依赖项。这些依赖项只在开发阶段使用，而不是在编译项目时使用。
+# 例如，一个项目可能依赖于一个测试框架来运行单元测试，但这个测试框架不会被项目的最终二进制文件所依赖，那么这个测试框架就可以被指定为 [dev-dependencies]。
 [dev-dependencies]
 diff = "0.1"
 tempdir = "0.3"
 filetime = "0.2"
 test-case = "2.2"
 
+# cargo.toml 的 [profile.release] 部分用于指定项目在 Release 模式下的编译选项。Release 模式下，会对项目进行优化，使得最终二进制文件尽可能小，运行速度尽可能快。
+# 例如，在 [profile.release] 中可以指定优化级别，是否开启 debug 信息，是否开启指针约束等选项。
 [profile.release]
+# LTO（Link Time Optimization）是一种优化技术，它可以在编译和链接阶段充分利用程序的结构信息来优化代码。
+# 在 cargo.toml 中，可以通过指定 lto = true 来开启 LTO。例如：
+# ```
+# [profile.release]
+# lto = true
+# ```
+# 开启 LTO 可以让程序运行得更快，但也会增加编译和链接时间。
 lto = true
 codegen-units = 1
 

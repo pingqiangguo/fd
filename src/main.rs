@@ -1,3 +1,6 @@
+// mod的语义是引入一个模块, 支持:
+// 1. 导入同目录下另外一个文件, 一个文件就是一个模块
+// 2. 导入同目录下的一个文件夹, 这个文件夹内必须有mod.rs, mod.rs是这个模块的入口
 mod cli;
 mod config;
 mod dir_entry;
@@ -11,6 +14,7 @@ mod output;
 mod regex_helper;
 mod walk;
 
+// use 的作用是的定义一个快捷方式, 可以是函数调用变得更短
 use std::env;
 use std::path::Path;
 use std::sync::Arc;
@@ -28,6 +32,18 @@ use crate::config::Config;
 use crate::exec::CommandSet;
 use crate::exit_codes::ExitCode;
 use crate::filetypes::FileTypes;
+/*
+[cfg(unix)] 是 Rust 的条件编译语法。它用于指定一段代码只在 Unix 系统（包括 Linux 和 MacOS）上编译运行。
+例如，我们可以在代码中使用 [cfg(unix)] 来包装一段特定于 Unix 系统的代码：
+#[cfg(unix)]
+fn do_something_unix() {
+// Unix 系统特定的代码
+}
+在项目的 cargo.toml 文件中，可以使用 [features] 部分来指定编译时使用哪些特性：
+[features]
+unix = ["cfg(unix)"]
+当项目依赖于 unix 特性时，[cfg(unix)] 标记的代码将会被编译运行。
+ */
 #[cfg(unix)]
 use crate::filter::OwnerFilter;
 use crate::filter::TimeFilter;
@@ -42,7 +58,7 @@ use crate::regex_helper::{pattern_has_uppercase_char, pattern_matches_strings_wi
     not(target_os = "freebsd"),
     not(all(target_env = "musl", target_pointer_width = "32")),
     not(target_arch = "riscv64"),
-    feature = "use-jemalloc"
+    feature = "use-jemalloc" // feture 是写在 Cargo.toml中的编译选项, 作用类似于宏, 完成编译控制
 ))]
 #[global_allocator]
 static ALLOC: jemallocator::Jemalloc = jemallocator::Jemalloc;
@@ -66,6 +82,7 @@ fn main() {
     }
 }
 
+// main函数运行主体
 fn run() -> Result<ExitCode> {
     let opts = Opts::parse();
 

@@ -1,3 +1,5 @@
+// 一个文件夹作为一个模块, 可以在这个文件夹里面增加一个mod.rs
+// 该文件是作用类似python的 __init__.py
 mod testenv;
 
 use std::fs;

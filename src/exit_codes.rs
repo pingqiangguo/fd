@@ -3,6 +3,7 @@ use std::process;
 #[cfg(unix)]
 use nix::sys::signal::{raise, signal, SigHandler, Signal};
 
+// 枚举类型, 记录fd命令的退出状态
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ExitCode {
     Success,
@@ -11,6 +12,7 @@ pub enum ExitCode {
     KilledBySigint,
 }
 
+// From 定义类型转化
 impl From<ExitCode> for i32 {
     fn from(code: ExitCode) -> Self {
         match code {
@@ -23,11 +25,12 @@ impl From<ExitCode> for i32 {
 }
 
 impl ExitCode {
+    // 判断程序是否执行出错, ExitCode所有权会转移,随后被回收
     fn is_error(self) -> bool {
         i32::from(self) != 0
     }
 
-    /// Exit the process with the appropriate code.
+    /// 使用适当的代码结束进程。
     pub fn exit(self) -> ! {
         #[cfg(unix)]
         if self == ExitCode::KilledBySigint {
